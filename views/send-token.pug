@@ -1,0 +1,12 @@
+extends layout
+
+block title
+    title Password recovery confirmation
+
+block content
+    h1 Password recovery confirmation
+    
+    form(action="/auth/createResetToken" method="POST")
+        input(type="hidden" name="email" value=email )
+        p
+            button(type="submit") Send password reset email!

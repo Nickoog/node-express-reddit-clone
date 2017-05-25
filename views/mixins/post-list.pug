@@ -1,11 +1,18 @@
+include create-vote
 mixin postList(posts)
+
     ul.post-list
         each post in posts
+            div.line
             li.post
-                h2
-                    a(href=post.url, target="_blank")= post.title
-                    p Submitted by
+                div.row
+                    +createVote(post)
+                    div.col-sm-11.text-center
+                        a(href="/post/" + post.id)= post.title
+                        h2 Submitted by  
                         a(href="/u/" + post.user.username)= post.user.username
-                        span  in
+                        span  in  
                         a(href="/r/" + post.subreddit.name) /r/#{post.subreddit.name}
-                    p Score: #{post.voteScore} Upvotes: #{post.numUpvotes} Downvotes: #{post.numDownvotes}
+                        p.score Score: #{post.voteScore} Upvotes: #{post.numUpvotes} Downvotes: #{post.numDownvotes}
+                
+                    

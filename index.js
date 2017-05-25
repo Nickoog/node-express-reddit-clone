@@ -7,6 +7,9 @@ var cookieParser = require('cookie-parser'); // parses cookie from Cookie reques
 var morgan = require('morgan'); // logs every request on the console
 var checkLoginToken = require('./lib/check-login-token.js'); // checks if cookie has a SESSION token and sets request.user
 var onlyLoggedIn = require('./lib/only-logged-in.js'); // only allows requests from logged in users
+var marked = require('marked')
+//var Thumbnail = require('thumbnail-viewer');
+
 
 // Controllers
 var authController = require('./controllers/auth.js');
@@ -21,6 +24,7 @@ var connection = mysql.createPool({
     database: 'reddit'
 });
 var myReddit = new RedditAPI(connection);
+// var thumbnail = new Thumbnail('/path/to/originals', '/path/to/thumbnails');
 
 
 // Create a new Express web server
@@ -55,7 +59,7 @@ This custom middleware checks in the cookies if there is a SESSION token and val
 NOTE: This middleware is currently commented out! Uncomment it once you've implemented the RedditAPI
 method `getUserFromSession`
  */
-// app.use(checkLoginToken(myReddit));
+app.use(checkLoginToken(myReddit));
 
 
 
@@ -102,31 +106,59 @@ app.get('/', function(request, response) {
     })
     .catch(function(error) {
         response.render('error', {error: error});
-    })
+    });
 });
 
 // Listing of subreddits
 app.get('/subreddits', function(request, response) {
+    myReddit.getAllSubreddits()
+    .then(function(subreddits){
+        response.render('list-subreddits', {subreddits: subreddits});
+    });
+});
+    
     /*
     1. Get all subreddits with RedditAPI
     2. Render some HTML that lists all the subreddits
      */
     
-    response.send("TO BE IMPLEMENTED");
-});
 
 // Subreddit homepage, similar to the regular home page but filtered by sub.
 app.get('/r/:subreddit', function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    myReddit.getSubredditByName(request.params.subreddit)
+    .then(subredditObject => {
+        if(!subredditObject) {
+            response.status(404).send("There's no subreddit " + request.params.subreddit);
+        }
+        
+        else{
+            console.log(subredditObject.id);
+            myReddit.getAllPosts(subredditObject.id)
+            .then(function(posts){
+                response.render('subreddit', {posts: posts, pageTitle: subredditObject.name, pageDescription: subredditObject.description});
+            });
+        }
+    });
 });
 
 // Sorted home page
 app.get('/sort/:method', function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    if(request.params.method !== 'hot' && request.params.method !== 'top') {
+        response.status(404).send("There's no method " + request.params.method);
+    }
+    else {
+        myReddit.getAllPosts(request.params.method)
+        .then(function(posts){
+            response.render('homepage', {posts: posts});
+        });
+    }
 });
 
 app.get('/post/:postId', function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    return Promise.all([myReddit.getSinglePost(request.params.postId), myReddit.getCommentsForPost(request.params.postId)]) 
+    .then(results =>{
+        response.render('single-post', {post:results[0], comments:results[1]});
+    });
 });
 
 /*
@@ -139,17 +171,79 @@ This basically says: if there is a POST /vote request, first pass it thru the on
 middleware calls next(), then also pass it to the final request handler specified.
  */
 app.post('/vote', onlyLoggedIn, function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    myReddit.getUserFromSession(request.cookies.SESSION)
+    .then(userInfo => {
+        // console.log(request.body.vote)
+        return myReddit.createVote({
+            postId: request.body.postId,
+            userId: userInfo.id,
+            voteDirection: request.body.vote
+        });
+    })
+    .then(newVote => {
+        response.redirect('back');
+    });
 });
+
+app.post('/commentVote', onlyLoggedIn, function(request, response) {
+    myReddit.getUserFromSession(request.cookies.SESSION)
+    .then(userInfo => {
+        console.log(request.body.commentId + ' ' + userInfo.id + ' ' + request.body.vote)
+        return myReddit.createCommentVote({
+            commentId: request.body.commentId,
+            userId: userInfo.id,
+            voteDirection: request.body.vote
+        });
+    })
+    .then(newVote => {
+        response.redirect('back');
+    });
+});
+
+app.post('/createComment', onlyLoggedIn, function(request, response) {
+    myReddit.getUserFromSession(request.cookies.SESSION)
+    .then(userInfo => {
+        return myReddit.createComment(
+            {
+                userId: userInfo.id,
+                postId: request.body.postId,
+                text: request.body.text
+            }
+        ).then (newComment => {
+            response.redirect('back');
+        })
+    })
+})
 
 // This handler will send out an HTML form for creating a new post
 app.get('/createPost', onlyLoggedIn, function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    myReddit.getAllSubreddits()
+    .then(subreddits => {
+        response.render('create-post-form', {subreddits:subreddits});
+    });
 });
 
 // POST handler for form submissions creating a new post
 app.post('/createPost', onlyLoggedIn, function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    myReddit.getUserFromSession(request.cookies.SESSION)
+    .then(userInfo => {
+        return myReddit.createPost({
+            userId: userInfo.id,
+            title: request.body.title,
+            url: request.body.url,
+            subredditId: request.body.subredditId
+        });
+    })
+    .then(newPost => {
+        response.redirect('/post/'+newPost);
+    });
+});
+
+app.get('/u/:username', onlyLoggedIn, function(request, response) {
+    myReddit.getAllPostsForUsername(request.params.username)
+    .then(posts => {
+        response.render('post-user', {posts: posts});
+    });
 });
 
 // Listen

@@ -2,19 +2,55 @@ doctype html
 html
     head
         meta(charset="utf-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
         link(rel="stylesheet", href="/static/app.css")
+        link(rel="stylesheet", href="/static/grid.css")
+        link(href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet")
         block title
-            title Redit Clone
+            title Reddit Clone
     body
-        header
-            if loggedInUser
-                p Welcome #{loggedInUser.username}
-            else
-                ul
-                    li
-                        a(href="/auth/signup") Signup
-                    li
-                        a(href="/auth/login") Login
+        header.main-header
+            div.row
+                div.col-sm-4.pages-links
+                    ul.block-grid.block-grid-sm-2.text-center
+                        li
+                            a(href="/subreddits") List of subreddits
+                        li
+                            a(href="/createPost") Add a new post
+                            
+                div.col-sm-4.home-button.text-center                 
+                    a(href="/")
+                        img(class="responsive-img home-button" src="http://i.imgur.com/rF2ehAd.png?1" title="source: imgur.com")            
+                
+                div.col-sm-4.pages-links
+                    if loggedInUser
+                    
+                        p Hi #{loggedInUser.username}, hope your having a good day!
+                        
+                            form(action="/auth/logout" method="POST")
+                                button(type="submit") logout
+        
+                    else
+                        ul.block-grid.block-grid-sm-2.text-center
+                            li
+                                form(action="/auth/signup" method="GET")
+                                    button(type="submit") signup
+                            li
+                                form(action="/auth/login" method="GET")
+                                    button(type="submit") login
+                                
+               
+                                        
+            
+                                
+                    
+                   
+              
         main
             block content
-        footer &copy; 2017 blah
+            
+        footer.main-footer.row
+            p.col-sm-3 &copy; 2017 Nicolas, Sebastien & Alexandre    
+            i(class="fa fa-reddit-alien col-sm-3" aria-hidden="true")
+                
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")

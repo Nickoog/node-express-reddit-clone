@@ -1,0 +1,5 @@
+mixin createComment(post)
+    form(action="/createComment" method="post")
+        input(type="hidden" name="postId" value=post.id)
+        textarea(name="text" required rows="10" cols="60" maxlength="200" placeholder="Leave a comment on this post!")
+        button(type="submit") Send comment!

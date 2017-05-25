@@ -1,0 +1,35 @@
+extends layout.pug
+include mixins/create-vote
+include mixins/create-commentVote
+include mixins/create-comment
+
+block title
+    title 
+    
+block content
+    
+    h2 
+        a(href=post.url, target="_blank")= post.title
+        
+        p Submitted by  
+            a(href="/u/" + post.user.username)= post.user.username
+            span   in  
+            a(href="/r/" + post.subreddit.name) /r/#{post.subreddit.name}
+        p Score: #{post.voteScore} Upvotes : #{post.numUpvotes} Downvotes: #{post.numDownvotes}
+        +createVote(post)
+    
+    +createComment(post)
+    
+    h3
+        if(comments.length>0)
+            p Comments:
+                ul 
+                    each comment in comments
+                        li #{comment.text}
+                        p Score: #{comment.voteScore} Upvotes: #{comment.numUpvotes} Downvotes: #{comment.numDownvotes}
+                        +createCommentVote(comment)
+                            p(class='comment-author') Created by  
+                                a(href="/u/" + comment.user.username)= comment.user.username
+    
+    
+

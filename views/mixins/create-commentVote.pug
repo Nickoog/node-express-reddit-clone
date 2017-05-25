@@ -1,0 +1,5 @@
+mixin createCommentVote(comment)
+    form(action="/commentVote" method="post")
+      input(type="hidden" name="commentId" value=comment.id)
+      button(type="submit" name="vote" value="1") upvote this comment
+      button(type="submit" name="vote" value="-1") downvote this comment

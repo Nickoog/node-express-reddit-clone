@@ -1,0 +1,16 @@
+extends layout.pug
+include mixins/post-list
+
+block title
+    title Welcome to #{pageTitle}
+
+block content
+    float
+        a(href="/") Back to homepage
+    // p Sort by:
+    //     a(href="/sort/hot") Hot  
+    //     span or  
+    //     a(href="/sort/top") Top
+    h1 Welcome to #{pageTitle}
+    h2!= pageDescription
+    +postList(posts)

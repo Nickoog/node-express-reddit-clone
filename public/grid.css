@@ -1,0 +1,220 @@
+/* Box-sizing fix! */
+html {
+  box-sizing: border-box;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* Utility classes */
+.responsive-img {
+  max-width: 100%;
+}
+.text-center {
+    text-align: center;
+}
+
+/* Grid system! */
+.row {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex; /* This will allow our row to display columns horizontally */
+    flex-wrap: wrap; /* This will become necessary to allow our flex boxes to stack in responsive mode */
+}
+
+/* Block grid system! */
+ul.block-grid {
+  display: flex; /* display elements next to each other */
+  flex-wrap: wrap;
+  list-style: none; /* disable bullets on the LI items */
+  padding-left: 0; /* reset the browser extra padding on UL elements */
+}
+
+ul.block-grid li {
+  padding: 5px; /* Adding a 10px padding on a 100% width would not work if it wasn't for box-sizing: border-box! */
+}
+
+/* Small and up columns */
+
+/* If an element needs all twelve columns, then its width is 100%. Easy. */
+.col-sm-12 {
+    width: 100%;
+}
+/* If an element needs 11 of 12 columns, its width is 11/12 * 100% */
+.col-sm-11 {
+    width: 91.666%;
+}
+.col-sm-10 {
+    width: 83.333%;
+}
+.col-sm-9 {
+    width: 75%;
+}
+.col-sm-8 {
+    width: 66.666%;
+}
+.col-sm-7 {
+    width: 58.333%;
+}
+/* This is the class we'd use if we want two 50/50 elements next to each other */
+.col-sm-6 {
+    width: 50%;
+}
+.col-sm-5 {
+    width: 41.666%;
+}
+/* This is the class we'd use if we want three elements next to each other */
+.col-sm-4 {
+    width: 33.333%;
+}
+/* This is the class we'd use if we want four elements next to each other */
+.col-sm-3 {
+    width: 25%;
+}
+.col-sm-2 {
+    width: 16.666%;
+}
+/* We'll almost NEVER use this */
+.col-sm-1 {
+    width: 8.333%;
+}
+
+.block-grid-sm-2 > li {
+  width: 50%;
+}
+.block-grid-sm-3 > li {
+  width: 33.333%;
+}
+.block-grid-sm-4 > li {
+  width: 25%;
+}
+.block-grid-sm-5 > li {
+  width: 20%;
+}
+.block-grid-sm-6 > li {
+  width: 16.666%;
+}
+
+/* Classes that apply to medium and larger devices */
+@media only screen and (min-width: 641px) {
+
+    .col-md-12 {
+        width: 100%;
+    }
+    /* If an element needs 11 of 12 columns, its width is 11/12 * 100% */
+    .col-md-11 {
+        width: 91.666%;
+    }
+    .col-md-10 {
+        width: 83.333%;
+    }
+    .col-md-9 {
+        width: 75%;
+    }
+    .col-md-8 {
+        width: 66.666%;
+    }
+    .col-md-7 {
+        width: 58.333%;
+    }
+    /* This is the class we'd use if we want two 50/50 elements next to each other */
+    .col-md-6 {
+        width: 50%;
+    }
+    .col-md-5 {
+        width: 41.666%;
+    }
+    /* This is the class we'd use if we want three elements next to each other */
+    .col-md-4 {
+        width: 33.333%;
+    }
+    /* This is the class we'd use if we want four elements next to each other */
+    .col-md-3 {
+        width: 25%;
+    }
+    .col-md-2 {
+        width: 16.666%;
+    }
+    /* We'll almost NEVER use this */
+    .col-md-1 {
+        width: 8.333%;
+    }
+
+    .block-grid-md-2 > li {
+      width: 50%;
+    }
+    .block-grid-md-3 > li {
+      width: 33.333%;
+    }
+    .block-grid-md-4 > li {
+      width: 25%;
+    }
+    .block-grid-md-5 > li {
+      width: 20%;
+    }
+    .block-grid-md-6 > li {
+      width: 16.666%;
+    }
+}
+
+/* Classes that apply to large devices only */
+@media only screen and (min-width: 1025px) {
+
+    .col-lg-12 {
+        width: 100%;
+    }
+    /* If an element needs 11 of 12 columns, its width is 11/12 * 100% */
+    .col-lg-11 {
+        width: 91.666%;
+    }
+    .col-lg-10 {
+        width: 83.333%;
+    }
+    .col-lg-9 {
+        width: 75%;
+    }
+    .col-lg-8 {
+        width: 66.666%;
+    }
+    .col-lg-7 {
+        width: 58.333%;
+    }
+    /* This is the class we'd use if we want two 50/50 elements next to each other */
+    .col-lg-6 {
+        width: 50%;
+    }
+    .col-lg-5 {
+        width: 41.666%;
+    }
+    /* This is the class we'd use if we want three elements next to each other */
+    .col-lg-4 {
+        width: 33.333%;
+    }
+    /* This is the class we'd use if we want four elements next to each other */
+    .col-lg-3 {
+        width: 25%;
+    }
+    .col-lg-2 {
+        width: 16.666%;
+    }
+    /* We'll almost NEVER use this */
+    .col-lg-1 {
+        width: 8.333%;
+    }
+
+    .block-grid-lg-2 > li {
+      width: 50%;
+    }
+    .block-grid-lg-3 > li {
+      width: 33.333%;
+    }
+    .block-grid-lg-4 > li {
+      width: 25%;
+    }
+    .block-grid-lg-5 > li {
+      width: 20%;
+    }
+    .block-grid-lg-6 > li {
+      width: 16.666%;
+    }
+}

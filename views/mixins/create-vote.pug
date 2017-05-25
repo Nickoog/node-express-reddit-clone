@@ -1,0 +1,7 @@
+mixin createVote(post)
+    form.vote.col-sm-1(action="/vote" method="post")
+      input(type="hidden" name="postId" value=post.id)
+      button(type="submit" name="vote" value="1") 
+        i(class="fa fa-thumbs-o-up" aria-hidden="true")
+      button(type="submit" name="vote" value="-1") 
+        i(class="fa fa-thumbs-o-down" aria-hidden="true")

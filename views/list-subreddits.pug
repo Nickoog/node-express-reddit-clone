@@ -1,0 +1,16 @@
+extends layout.pug
+
+block title
+    title List of subreddit!
+
+block content
+   
+    h1 List of subreddits
+    
+    ul
+        each subreddit in subreddits
+            li
+                a(href="/r/" + subreddit.name)= subreddit.name
+                span
+                p !{subreddit.description}
+                            
